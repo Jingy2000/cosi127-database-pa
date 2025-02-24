@@ -2,7 +2,8 @@ CREATE TABLE MotionPicture(
 id INTEGER,
 name VARCHAR(255),
 rating FLOAT CHECK(rating >= 0 AND rating <=10),
-production CHAR,
+-- use VARCHAR(255) instead of CHAR
+production VARCHAR(255),
 budget INTEGER CHECK(budget >= 0),
 PRIMARY KEY(id)
 );
@@ -17,18 +18,23 @@ PRIMARY KEY(email)
 CREATE TABLE Likes(
 uemail VARCHAR(255),
 mpid INTEGER,
+-- add primary key
+PRIMARY KEY(uemail,mpid),
 FOREIGN KEY(uemail) REFERENCES User(email) ON DELETE CASCADE,
 FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Movie(
-mpid INTEGER,
+-- add mpid as primary key
+mpid INTEGER PRIMARY KEY,
 boxoffice_collection FLOAT CHECK(boxoffice_collection >=0),
 FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE);
 
 CREATE TABLE Series(
-mpid INTEGER,
-season_count INTEGER,
+-- add mpid as primary key
+mpid INTEGER PRIMARY KEY,
+-- add season_count check: at least 1
+season_count INTEGER CHECK(season_count >= 1),
 PRIMARY KEY(mpid),
 FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE)
 
@@ -37,7 +43,8 @@ id INTEGER PRIMARY KEY,
 name VARCHAR(255),
 nationality VARCHAR(255),
 dob DATE,
-gender VARCHAR(255)
+-- gender can be use less space
+gender VARCHAR(10)
 );
 
 CREATE TABLE Role(
