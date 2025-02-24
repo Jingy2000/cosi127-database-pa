@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Like Movie - Success</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ message }}</h1>
+
+        <!-- Display error information if the query fails -->
+        {% if "error" in message.lower() %}
+            <p style="color: red; font-weight: bold;">
+                ⚠ This message appears if the SQL query fails. Check your query and database constraints.
+            </p>
+        {% endif %}
+
+        <br>
+        <a href="/">Back to Home</a> <!-- Link back to the home page -->
+    </div>
+</body>
+</html>

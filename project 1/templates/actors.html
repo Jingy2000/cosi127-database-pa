@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Actors</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>All Actors</h1>
+        
+        {% if actors %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Actor Name</th>
+                        <th>Nationality</th>
+                        <th>Date of Birth</th>
+                        <th>Gender</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for actor in actors %}
+                        <tr>
+                            <td>{{ actor[0] }}</td> <!-- Actor's name -->
+                            <td>{{ actor[1] }}</td> <!-- Nationality -->
+                            <td>{{ actor[2] }}</td> <!-- Date of Birth -->
+                            <td>{{ actor[3] }}</td> <!-- Gender -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No actors found in the database.</p>
+        {% endif %}
+        
+        <br>
+        <a href="/">Back to Home</a>  <!-- Link back to home page -->
+    </div>
+</body>
+</html>

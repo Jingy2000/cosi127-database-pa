@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Database</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome to the Movie Database</h1>
+
+        <p>Choose an option below to view details:</p>
+
+        <ul>
+
+            <!-- Link to view all movies -->
+            <li><a href="/movies"><button>View All Movies</button></a></li>
+            <br>
+            <!-- Link to view all actors -->
+            <li><a href="/actors"><button>View All Actors</button></a></li>
+            <br>
+            <!-- Form to like a movie (updated with dropdown) -->
+            <li>
+                <form action="/movies/like_movie" method="POST">
+                    <input type="email" name="user_email" placeholder="Your Email" required>
+                    <select name="movie_id" required>
+                        <option value="" disabled selected>Select a Movie</option>
+                        {% for movie in movies %}
+                        <option value="{{ movie[0] }}">{{ movie[0] }} ({{ movie[1] }})</option>
+                        <!-- Movie ID and Name -->
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Like Movie</button>
+                </form>
+            </li>
+            <br>
+        <!-- Link to home page (if needed) -->
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+
+</html>

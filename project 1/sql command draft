@@ -1,0 +1,72 @@
+CREATE TABLE MotionPicture(
+id INTEGER,
+name VARCHAR(255),
+rating FLOAT CHECK(rating >= 0 AND rating <=10),
+production CHAR,
+budget INTEGER CHECK(budget >= 0),
+PRIMARY KEY(id)
+);
+
+CREATE TABLE User(
+email VARCHAR(255),
+name VARCHAR(255),
+age INTEGER,
+PRIMARY KEY(email)
+);
+
+CREATE TABLE Likes(
+uemail VARCHAR(255),
+mpid INTEGER,
+FOREIGN KEY(uemail) REFERENCES User(email) ON DELETE CASCADE,
+FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Movie(
+mpid INTEGER,
+boxoffice_collection FLOAT CHECK(boxoffice_collection >=0),
+FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE);
+
+CREATE TABLE Series(
+mpid INTEGER,
+season_count INTEGER,
+PRIMARY KEY(mpid),
+FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE)
+
+CREATE TABLE People(
+id INTEGER PRIMARY KEY,
+name VARCHAR(255),
+nationality VARCHAR(255),
+dob DATE,
+gender VARCHAR(255)
+);
+
+CREATE TABLE Role(
+mpid INTEGER,
+pid INTEGER,
+role_name VARCHAR(255),
+PRIMARY KEY(mpid,pid,role_name),
+FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE,
+FOREIGN KEY(pid) REFERENCES People(id) ON DELETE CASCADE);
+
+CREATE TABLE Award(
+mpid INTEGER,
+pid INTEGER,
+award_name VARCHAR(255),
+award_year YEAR,
+PRIMARY KEY(mpid,pid,award_name,award_year),
+FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE,
+FOREIGN KEY(pid) REFERENCES People(id) ON DELETE CASCADE);
+
+CREATE TABLE Genre(
+mpid INTEGER,
+genre_name VARCHAR(255),
+PRIMARY KEY(mpid,genre_name),
+FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE);
+
+CREATE TABLE Location(
+mpid INTEGER,
+zip VARCHAR(10),
+city VARCHAR(255),
+country VARCHAR(255),
+PRIMARY KEY(mpid,zip),
+FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE);
