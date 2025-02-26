@@ -8,7 +8,7 @@ INSERT INTO MotionPicture (id, NAME, rating, production, budget) VALUES
 (203, 'Doctor Strange', 8, 'Marvel', 300000000),
 (204, 'Batman vs Superman', 3, 'Warner Bros', 300000000);
 
-INSERT INTO Users (email, NAME, age) VALUES
+INSERT INTO User (email, NAME, age) VALUES
 ('aneesha@fb.com', 'Aman Aneesh', 25),
 ('ssarkar@bu.edu', 'Simone Sarkar', 23),
 ('jamiel@gmail.com', 'Jamie Vardy', 29),

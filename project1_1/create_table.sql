@@ -35,8 +35,7 @@ CREATE TABLE Series(
 mpid INTEGER PRIMARY KEY,
 -- add season_count check: at least 1
 season_count INTEGER CHECK(season_count >= 1),
-PRIMARY KEY(mpid),
-FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE)
+FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE);
 
 CREATE TABLE People(
 id INTEGER PRIMARY KEY,
