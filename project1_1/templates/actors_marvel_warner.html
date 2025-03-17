@@ -3,36 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Movies</title>
+    <title>Actors in Both Marvel and Warner Bros Movies</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>All Movies</h1>
+        <h1>Actors Who Have Played a Role in Both Marvel and Warner Bros Productions</h1>
         
-        {% if movies %}
+        {% if results %}
             <table>
                 <thead>
                     <tr>
+                        <th>Actor Name</th>
                         <th>Movie Name</th>
-                        <th>Rating</th>
-                        <th>Production</th>
-                        <th>Budget</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for movie in movies %}
+                    {% for result in results %}
                         <tr>
-                            <td>{{ movie[0] }}</td> <!-- Movie Name -->
-                            <td>{{ movie[1] }}</td> <!-- Rating -->
-                            <td>{{ movie[2] }}</td> <!-- Production -->
-                            <td>{{ movie[3] }}</td> <!-- Budget -->
+                            <td>{{ result[0] }}</td> <!-- Actor Name -->
+                            <td>{{ result[1] }}</td> <!-- Movie Name -->
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p>No movies found in the database.</p>
+            <p>No actors found who have played roles in both Marvel and Warner Bros productions.</p>
         {% endif %}
         
         <br>
