@@ -10,7 +10,7 @@ def list_tables():
 
     # >>>> TODO 1: Write a query to list all the tables in the database. <<<<
 
-    query = """ """
+    query = """SHOW TABLES """
 
     with Database() as db:
         tables = db.execute(query)
@@ -40,7 +40,7 @@ def search_liked_movies():
     # >>>> TODO 3: Find the movies that have been liked by a specific user’s email. <<<<
     #              List the movie `name`, `rating`, `production` and `budget`.
 
-    query = """ """
+    query = """SELECT m.name, m.rating, m.production, m.budget FROM Movie m WHERE m.mpid IN (SELECT l.mpid FROM Likes l where l.uemail = (user_email) ) VALUES(%s) """
 
     with Database() as db:
         movies = db.execute(query, (user_email,))
