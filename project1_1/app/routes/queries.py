@@ -40,7 +40,10 @@ def search_liked_movies():
     # >>>> TODO 3: Find the movies that have been liked by a specific user’s email. <<<<
     #              List the movie `name`, `rating`, `production` and `budget`.
 
-    query = """SELECT m.name, m.rating, m.production, m.budget FROM Movie m WHERE m.mpid IN (SELECT l.mpid FROM Likes l where l.uemail = (user_email) ) VALUES(%s) """
+    query = """SELECT mp.name, mp.rating, mp.production, mp.budget 
+    FROM Movie m JOIN MotionPicture mp ON m.mpid = mp.id
+    WHERE m.mpid IN
+    (SELECT l.mpid FROM Likes l where l.uemail = %s ) """
 
     with Database() as db:
         movies = db.execute(query, (user_email,))

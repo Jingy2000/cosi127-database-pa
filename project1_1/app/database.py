@@ -79,7 +79,6 @@ class Database:
             ...     db.execute("INSERT INTO Users (email, name, age) VALUES (%s, %s, %s)", 
             ...                 ("johndoe@example.com", "John Doe", 30), commit=True)
         """
-
         try:
             self.cursor.execute(query, params or ())
             if commit:
