@@ -233,6 +233,7 @@ def top_thriller_movies_boston():
     query = """
     SELECT mp.name, mp.rating
     FROM MotionPicture mp
+    JOIN Movie mv ON mp.id = mv.mpid
     JOIN Genre g ON mp.id = g.mpid
     WHERE g.genre_name = 'Thriller'
     AND mp.id IN (
@@ -340,6 +341,7 @@ def top_5_movies_people_roles():
     COUNT(DISTINCT p.id) as people_count, 
     COUNT(r.role_name) as role_count
     FROM MotionPicture mp
+    JOIN Movie mv ON mp.id = mv.mpid
     JOIN Role r ON mp.id = r.mpid
     JOIN People p ON r.pid = p.id
     GROUP BY mp.id, mp.name
