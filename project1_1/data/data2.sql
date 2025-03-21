@@ -35,7 +35,7 @@ INSERT INTO MotionPicture (id, NAME, rating, production, budget) VALUES
 (124, 'The Big Bang Theory', 8.1, 'Chuck Lorre Productions', 90000000),
 (125, 'Breaking Point', 7.5, 'High Bridge Productions', 80000000);
 
-INSERT INTO Users (email, NAME, age) VALUES
+INSERT INTO User (email, NAME, age) VALUES
 -- ('aneesha@fb.com', 'Aman Aneesh', 25),
 -- ('ssarkar@bu.edu', 'Simone Sarkar', 23),
 -- ('jamiel@gmail.com', 'Jamie Vardy', 29),

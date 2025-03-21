@@ -4,7 +4,7 @@ name VARCHAR(255),
 rating FLOAT CHECK(rating >= 0 AND rating <=10),
 -- use VARCHAR(255) instead of CHAR
 production VARCHAR(255),
-budget INTEGER CHECK(budget >= 0),
+budget BIGINT CHECK(budget >= 0),
 PRIMARY KEY(id)
 );
 
@@ -27,7 +27,7 @@ FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE
 CREATE TABLE Movie(
 -- add mpid as primary key
 mpid INTEGER PRIMARY KEY,
-boxoffice_collection FLOAT CHECK(boxoffice_collection >=0),
+boxoffice_collection BIGINT CHECK(boxoffice_collection >=0),
 FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE);
 
 CREATE TABLE Series(
