@@ -44,13 +44,10 @@ def search_liked_movies():
     # >>>> TODO 3: Find the movies that have been liked by a specific user’s email. <<<<
     #              List the movie `name`, `rating`, `production` and `budget`.
 
-    query = """
-    SELECT mp.name, mp.rating, mp.production, mp.budget
-    FROM MotionPicture mp
-    JOIN Likes l ON mp.id = l.mpid
-    JOIN User u ON l.uemail = u.email
-    WHERE u.email = %s
-    """
+    query = """SELECT mp.name, mp.rating, mp.production, mp.budget 
+    FROM Movie m JOIN MotionPicture mp ON m.mpid = mp.id
+    WHERE m.mpid IN
+    (SELECT l.mpid FROM Likes l where l.uemail = %s ) """
 
     with Database() as db:
         movies = db.execute(query, (user_email,))
@@ -85,7 +82,15 @@ def search_directors_by_zip():
     # >>>> TODO 5: List all directors who have directed TV series shot in a specific zip code. <<<<
     #              List the director name and TV series name only without duplicates.
 
-    query = """ """
+    query = """ SELECT DISTINCT p.name, mp.name 
+                FROM People p JOIN Role r ON p.id = r.pid
+                JOIN MotionPicture mp ON r.mpid = mp.id
+                WHERE mp.id IN
+                (SELECT mp2.id 
+                FROM MotionPicture mp2 JOIN Location l ON l.mpid = mp2.id 
+                JOIN Series s ON mp2.id = s.mpid
+                WHERE l.zip = %s)
+                AND r.role_name = 'Director'""" # inner select to filter out the mp with the specific location, and use the triple join to 
 
     with Database() as db:
         results = db.execute(query, (zip_code,))
@@ -127,7 +132,24 @@ def find_youngest_oldest_actors():
     #              The age should be computed from the person’s date of birth to the award winning year only. 
     #              In case of a tie, list all of them.
 
-    query = """ """
+    query = """SELECT DISTINCT p.name, (a.award_year - YEAR(p.dob)) AS age
+                FROM People p JOIN Award a On p.id = a.pid
+                JOIN Role r ON r.pid = a.pid AND r.mpid = a.mpid
+                WHERE r.role_name = 'Actor' 
+                    AND(
+                        SELECT MIN(YEAR(a2.award_year) - YEAR(p2.dob))
+                        FROM Award a2
+                        JOIN People p2 ON a2.pid = p2.id
+                        JOIN Role r2 ON r2.pid = a2.pid AND r2.mpid = a2.mpid
+                        WHERE r2.role_name = 'actor'
+                    )
+                    OR (YEAR(a.award_year) - YEAR(p.dob)) = (
+                        SELECT MAX(YEAR(a2.award_year) - YEAR(p2.dob))
+                        FROM Award a2
+                        JOIN People p2 ON a2.pid = p2.id
+                        JOIN Role r2 ON r2.pid = a2.pid AND r2.mpid = a2.mpid
+                        WHERE r2.role_name = 'actor'
+                    )"""
 
     with Database() as db:
         actors = db.execute(query)
@@ -188,7 +210,12 @@ def search_multiple_roles():
     # >>>> TODO 9: List the people who have played multiple roles in a motion picture where the rating is more than “X”. <<<<
     #              List the person’s `name`, `motion picture name` and `count of number of roles` for that particular motion picture.
 
-    query = """ """
+    query = """SELECT DISTINCT p.name, mp.name, COUNT(r.role_name) AS role_count
+                FROM People p JOIN Role r ON p.id = r.pid
+                JOIN MotionPicture mp ON mp.id = r.mpid
+                WHERE mp.rating > %s
+                GROUP BY p.name, mp.name
+                HAVING COUNT(r.role_name) > 1 """
 
     with Database() as db:
         results = db.execute(query, (rating_threshold,))
