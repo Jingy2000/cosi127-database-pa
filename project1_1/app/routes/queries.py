@@ -223,7 +223,14 @@ def search_movies_by_likes():
     # >>>> TODO 11: Find all the movies with more than “X” likes by users of age less than “Y”. <<<<
     #               List the movie names and the number of likes by those age-group users.
 
-    query = """ """
+    query = """SELECT mp.name, COUNT(u.email) AS user_count
+FROM MotionPicture mp 
+JOIN Likes l ON mp.id = l.mpid
+JOIN Users u ON l.uemail = u.email
+WHERE mp.id IN (SELECT mpid FROM Movie)
+AND u.age < %s
+GROUP BY mp.id, mp.name
+HAVING COUNT(u.email) > %s; """
 
     with Database() as db:
         results = db.execute(query, (max_age, min_likes))
@@ -255,7 +262,12 @@ def movies_higher_than_comedy_avg():
     # >>>> TODO 13: Find the motion pictures that have a higher rating than the average rating of all comedy (genre) motion pictures. <<<<
     #               Show the names and ratings in descending order of ratings.
 
-    query = """ """
+    query = """ SELECT DISTINCT mp.name, mp.rating 
+    FROM MotionPicture mp 
+    WHERE mp.rating > (SELECT AVG(mp2.rating) FROM MotionPicture mp2 JOIN Genre g2 ON mp2.id = g2.mpid
+                       GROUP BY g2.genre_name
+                       HAVING g2.genre_name = "Comedy")
+    ORDER BY mp.rating DESC"""
 
     with Database() as db:
         results = db.execute(query)
@@ -287,7 +299,25 @@ def actors_with_common_birthday():
     # >>>> TODO 15: Find actors who share the same birthday. <<<<
     #               List the actor names (actor 1, actor 2) and their common birthday.
 
-    query = """ """
+    query = """ SELECT p1.name AS actor1, 
+                p2.name AS actor2, 
+                p1.dob AS common_birthday
+            FROM People p1
+            JOIN People p2 
+            ON p1.dob = p2.dob 
+            AND p1.id < p2.id
+            WHERE EXISTS (
+                SELECT 1 
+                FROM Role r1 
+                WHERE r1.pid = p1.id 
+                AND r1.role_name = 'actor'
+            )
+            AND EXISTS (
+                SELECT 1 
+                FROM Role r2 
+                WHERE r2.pid = p2.id 
+                AND r2.role_name = 'actor'
+            ) """
 
     with Database() as db:
         results = db.execute(query)
