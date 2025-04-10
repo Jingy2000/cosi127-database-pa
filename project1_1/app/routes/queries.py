@@ -132,24 +132,22 @@ def find_youngest_oldest_actors():
     #              The age should be computed from the person’s date of birth to the award winning year only. 
     #              In case of a tie, list all of them.
 
-    query = """SELECT DISTINCT p.name, (a.award_year - YEAR(p.dob)) AS age
-                FROM People p JOIN Award a On p.id = a.pid
-                JOIN Role r ON r.pid = a.pid AND r.mpid = a.mpid
-                WHERE r.role_name = 'Actor' 
-                    AND(
-                        SELECT MIN(YEAR(a2.award_year) - YEAR(p2.dob))
-                        FROM Award a2
-                        JOIN People p2 ON a2.pid = p2.id
-                        JOIN Role r2 ON r2.pid = a2.pid AND r2.mpid = a2.mpid
-                        WHERE r2.role_name = 'actor'
-                    )
-                    OR (YEAR(a.award_year) - YEAR(p.dob)) = (
-                        SELECT MAX(YEAR(a2.award_year) - YEAR(p2.dob))
-                        FROM Award a2
-                        JOIN People p2 ON a2.pid = p2.id
-                        JOIN Role r2 ON r2.pid = a2.pid AND r2.mpid = a2.mpid
-                        WHERE r2.role_name = 'actor'
-                    )"""
+    query = """WITH actor_age as (
+                SELECT p.name AS actor_name,
+                        (CAST(a.award_year AS SIGNED) - YEAR(p.dob)) AS actor_age
+                FROM Award a
+                JOIN People p ON a.pid = p.id
+                JOIN Role r ON p.id = r.pid
+                WHERE r.role_name = 'actor'
+                AND p.dob IS NOT NULL
+                )
+
+                SELECT * 
+                FROM actor_age
+                WHERE actor_age = (SELECT MAX(actor_age) FROM actor_age)
+                OR actor_age = (SELECT MIN(actor_age) FROM actor_age)
+                ORDER BY actor_age DESC;
+                """
 
     with Database() as db:
         actors = db.execute(query)
@@ -240,8 +238,8 @@ def top_thriller_movies_boston():
         SELECT l.mpid
         FROM Location l
         GROUP BY l.mpid
-        HAVING SUM(CASE WHEN l.city = 'Boston' THEN 1 ELSE 0 END) > 0
-        AND SUM(CASE WHEN l.city != 'Boston' THEN 1 ELSE 0 END) = 0
+        HAVING COUNT(DISTINCT city) = 1 
+        AND Max(l.city) = 'Boston'
     )
     ORDER BY mp.rating DESC
     LIMIT 2
